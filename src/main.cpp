@@ -1,421 +1,142 @@
 #include <Arduino.h>
 
+ /*To have a correct display, 
+the LEDs must be connected in the mirror! 
+the last pin will be the first Led*/
+
+// Define 74HC595 pins
+const int latchPin = 8; // ST_CP pin
+const int clockPin = 12; // SH_CP pin
+const int dataPin = 11; // DS pin
+
+// LED configuration matrix for each digit
+int ledMatrix[10][5][3] = {
+  // 0
+  {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 1, 1}
+  },
+  // 1
+  {
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 0, 1}
+  },
+  // 2
+  {
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1}
+  },
+  // 3
+  {
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1}
+  },
+  // 4
+  {
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1}
+  },
+  // 5
+  {
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1}
+  },
+  // 6
+  {
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1}
+  },
+  // 7
+  {
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 0, 1}
+  },
+  // 8
+  {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1}
+  },
+  // 9
+  {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1}
+  }
+};
 
 void setup() {
-
-  pinMode(D3, OUTPUT);// DATA
-  pinMode(D4, OUTPUT);//Muta registrii
-  pinMode(D5, OUTPUT);// CLOCK
+  // Set control pins as outputs
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+  // Start serial communication
+  Serial.begin(9600);
 }
-// the loop function runs over and over again forever
+
+// Function to send a bit
+void sendBit(int bit) {
+  // Set data pin (DS)
+  digitalWrite(dataPin, bit);
+  // Generate clock pulse (SH_CP)
+  digitalWrite(clockPin, HIGH);
+  digitalWrite(clockPin, LOW);
+}
+
+// Function to send a byte to 74HC595
+void sendData(int ledState) {
+  // Send a bit for LED state
+  sendBit(ledState ? HIGH : LOW);
+}
+
+void displayDigit(int digit) {
+  // Send current configuration to the two 74HC595s
+  digitalWrite(latchPin, LOW);
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 3; j++) {
+      sendData(ledMatrix[digit][i][j]);
+    }
+  }
+  digitalWrite(latchPin, HIGH);
+}
+
 void loop() {
-  
-//COD PENTRU NR 0
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-//COD PENTRU NR 1
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-///COD PENTRU NR 2--INCA NU E BUN
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-//COD PENTRU NR 3 
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-//COD PT NR 4
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-//COD PT NR 5
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-//COD PENTRU NR 6
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-
-//COD PT NR 7
-    digitalWrite(D3, LOW); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-////cod pentru 8
-
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);
-
-////cod pentru nr 9
-    digitalWrite(D3, HIGH); //LED 8
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 7
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, LOW);//LED 6
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 5
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 4
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 3
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 2
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-    digitalWrite(D3, HIGH);//LED 1
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(900);}
-/*for(int x=0;x<8;x++){
-    digitalWrite(D3, HIGH); 
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
+  if (Serial.available() > 0) {
+    // Read the incoming byte
+    int digit = Serial.parseInt();
+    // Display the received digit
+    if (digit >= 0 && digit <= 9) {
+      displayDigit(digit);
+    } else {
+      Serial.println("Invalid digit! Please enter a number between 0 and 9.");
+    }
+  }
 }
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(10000);
-
- for(int y=0;y<8;y++){
-    digitalWrite(D3, LOW); 
-    digitalWrite(D5, LOW);
-    digitalWrite(D5, HIGH);
-}
-
-digitalWrite(D4, HIGH);
-delay(100);
-digitalWrite(D4, LOW);
-delay(100);
-}*/
