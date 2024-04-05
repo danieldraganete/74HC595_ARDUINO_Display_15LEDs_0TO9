@@ -1,6 +1,8 @@
 # embedded_595_15LED_counter
 My First project on GitHub with embedded to test 74HC595N start date 04.04.2024
 
+The code it is updated and fully functional -> date : 05.04.2024
+
 This code it is intended for PlatformIO, if you are using ArduinoIDE it will be enough just to open "CodeFile-for-ArduinoIDE.ino" file in Arduino ide.
 
 Code Description:
@@ -29,7 +31,7 @@ This configuration and functionality allows for sequential display of digits on 
 
 Link to TinkerCAD -> https://www.tinkercad.com/things/52jVeVKwmmL-frantic-jaban/editel?sharecode=e2cEcgFiD7B4mP9ZbcmDPOyDTj1b-XN3_OpPorSRiVk
 
-The code it is updated and fully functional -> date : 05.04.2024
+
 
 
 ![](Design-picture.png)
