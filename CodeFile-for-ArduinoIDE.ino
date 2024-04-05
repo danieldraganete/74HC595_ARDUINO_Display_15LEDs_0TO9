@@ -1,4 +1,3 @@
-#include <Arduino.h>
 
  /*To have a correct display, 
 the LEDs must be connected in the mirror! 
