@@ -1,4 +1,4 @@
-# embedded_595_15LED_counter
+# LED_Display_74HC595 (15Leds,2x595,1xArduino) 0 TO 9
 My First project on GitHub with embedded to test 74HC595N start date 04.04.2024
 
 The code it is updated and fully functional -> date : 05.04.2024
